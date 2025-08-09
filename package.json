@@ -15,7 +15,7 @@
 	],
 	"type": "module",
 	"bin": {
-		"railway-mcp-server": "dist/index.js"
+		"railway-mcp-server": "./dist/index.js"
 	},
 	"main": "dist/index.js",
 	"packageManager": "pnpm@10.14.0",
