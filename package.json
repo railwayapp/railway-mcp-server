@@ -1,5 +1,5 @@
 {
-	"name": "railway-mcp-server",
+	"name": "@railway/mcp-server",
 	"version": "0.1.0",
 	"description": "Official Railway MCP server",
 	"author": "Railway",
