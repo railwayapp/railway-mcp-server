@@ -11,7 +11,11 @@ The [Railway CLI](https://docs.railway.com/guides/cli) is required for this serv
 
 ## Installation
 
-One-click installation is supported for Cursor and VSCode.
+One-click installation is supported for:
+
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=railway-mcp-server&config=JTdCJTIyY29tbWFuZCUyMiUzQSUyMm5weCUyMC15JTIwJTQwcmFpbHdheSUyRm1jcC1zZXJ2ZXIlMjIlN0Q%3D)
+
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_railway--mcp--server-0098FF?style=for-the-badge&logo=visualstudiocode&logoColor=ffffff)](vscode:mcp/install?%7B%22name%22%3A%22railway-mcp-server%22%2C%22type%22%3A%22stdio%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40railway%2Fmcp-server%22%5D%7D)
 
 <details>
 <summary><strong>Manual Installation</strong></summary>
@@ -161,9 +165,3 @@ The Railway MCP Server provides the following tools for managing your Railway in
      }
    }
    ```
-   
-
-5. **Start the server**
-   ```bash
-   pnpm start
-
