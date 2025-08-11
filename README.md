@@ -11,32 +11,23 @@ The [Railway CLI](https://docs.railway.com/guides/cli) is required for this serv
 
 ## Installation
 
-One-click installation is supported for:
+### Cursor
+Add the following configuration to `.cursor/mcp.json`
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=railway-mcp-server&config=JTdCJTIyY29tbWFuZCUyMiUzQSUyMm5weCUyMC15JTIwJTQwcmFpbHdheSUyRm1jcC1zZXJ2ZXIlMjIlN0Q%3D)
+```json
+{
+  "mcpServers": {
+    "railway-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "@railway/mcp-server"],
+    }
+  }
+}
+```
 
-[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_railway--mcp--server-0098FF?style=for-the-badge&logo=visualstudiocode&logoColor=ffffff)](vscode:mcp/install?%7B%22name%22%3A%22railway-mcp-server%22%2C%22type%22%3A%22stdio%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40railway%2Fmcp-server%22%5D%7D)
+### VS Code: 
 
-<details>
-<summary><strong>Manual Installation</strong></summary>
-
-
-   Add the following configuration to your MCP client (e.g., Cursor, VSCode)
-   
-   Cursor: `.cursor/mcp.json`
-
-   ```json
-   {
-     "mcpServers": {
-       "railway-mcp-server": {
-         "command": "npx",
-         "args": ["-y", "@railway/mcp-server"],
-       }
-     }
-   }
-   ```
-
-   VSCode: `.vscode/mcp.json`
+Add the following configuration to `.vscode/mcp.json`
 
    ```json
    
@@ -52,7 +43,6 @@ One-click installation is supported for:
    ```
    
 
-</details>
 
 ## Example Usage
 
