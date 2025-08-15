@@ -12,7 +12,12 @@ The [Railway CLI](https://docs.railway.com/guides/cli) is required for this serv
 ## Installation
 
 ### Cursor
-Add the following configuration to `.cursor/mcp.json`
+
+You can add the Railway MCP Server to Cursor by clicking the button below.
+
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=railway-mcp-server&config=eyJjb21tYW5kIjoibnB4IC15IEByYWlsd2F5L21jcC1zZXJ2ZXIifQ%3D%3D)
+
+Alternatively, you can add the following configuration to `.cursor/mcp.json`
 
 ```json
 {
