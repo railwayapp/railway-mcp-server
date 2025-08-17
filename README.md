@@ -47,7 +47,10 @@ Add the following configuration to `.vscode/mcp.json`
    }
    ```
    
-
+### Claude Code:
+```shell
+claude mcp add railway-mcp-server -- npx -y @railway/mcp-server
+```
 
 ## Example Usage
 
