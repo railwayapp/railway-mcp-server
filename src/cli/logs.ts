@@ -8,13 +8,13 @@ const buildLogCommand = (
 	service?: string,
 	environment?: string,
 ) => {
-	let command = `railway logs --${type} --json`;
+	const args = ["logs", `--${type}`, "--json"];
 
-	if (deploymentId) command += ` ${deploymentId}`;
-	if (service) command += ` --service ${service}`;
-	if (environment) command += ` --environment ${environment}`;
+	if (deploymentId) args.push(deploymentId);
+	if (service) args.push("--service", service);
+	if (environment) args.push("--environment", environment);
 
-	return command;
+	return `railway ${args.join(" ")}`;
 };
 
 export type GetLogsOptions = {
