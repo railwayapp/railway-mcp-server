@@ -2,6 +2,10 @@
 
 A Model Context Protocol (MCP) server for interacting with your Railway account. This is a local MCP server provides a set of opinionated workflows and tools for managing Railway resources.
 
+<a href="https://glama.ai/mcp/servers/@railwayapp/railway-mcp-server">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@railwayapp/railway-mcp-server/badge" alt="Railway Server MCP server" />
+</a>
+
 > [!IMPORTANT]
 > This is an experimental project (like really experimental). You should expect bugs and missing features. The MCP server doesn't include destructive actions by design, that said, you should still keep an eye on which tools and commands are being executed.
 
@@ -47,8 +51,6 @@ Add the following configuration to `.vscode/mcp.json`
    }
    ```
    
-
-
 ## Example Usage
 
 Creating a new project, deploying it, and generating a domain
@@ -56,7 +58,6 @@ Creating a new project, deploying it, and generating a domain
 ```text
 Create a Next.js app in this directory and deploy it to Railway. Make sure to also assign it a domain. Since we're starting from scratch, there is no need to pull information about the deployment or build for now
 ```
-
 
 Deploy a from a template (database, queue, etc.). Based on your prompt, the appropriate template will be selected and deployed. In case of multiple templates, the agent will pick the most appropriate one. Writing a detailed prompt will lead to a better selection. [Check out all of the available templates](https://railway.com/deploy).
 
@@ -67,7 +68,6 @@ Deploy a Postgres database
 ```text
 Deploy a single node Clickhouse database
 ```
-
 
 Pulling environment variables
 
@@ -103,13 +103,11 @@ The Railway MCP Server provides the following tools for managing your Railway in
 - Monitoring & Logs
   - `get-logs` - Retrieve build or deployment logs for a service
 
-
 ## Development
 
 ### Prerequisites
 - Node.js >= 20.0.0
 - pnpm >= 10.14.0
-
 
 1. **Clone the repository**
    ```bash
