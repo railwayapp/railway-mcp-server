@@ -44,11 +44,10 @@ jobs:
 
       - name: Install MCP Publisher
         run: |
-          # Build publisher from source (requires Go)
           git clone https://github.com/modelcontextprotocol/registry publisher-repo
           cd publisher-repo
           make publisher
-          cp cmd/publisher/bin/mcp-publisher ../mcp-publisher
+          cp bin/mcp-publisher ../mcp-publisher
           cd ..
           chmod +x mcp-publisher
       
