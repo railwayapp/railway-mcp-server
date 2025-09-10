@@ -25,9 +25,12 @@ jobs:
         run: pnpm run build
       
       - name: Publish to npm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance
+
+      - name: Setup Go (for mcp-publisher build)
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
       
       - name: Install MCP Publisher
         run: |
