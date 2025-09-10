@@ -36,11 +36,11 @@ jobs:
       
       - name: Build package  
         run: pnpm run build
-      # commented out npm publish for now
-      # - name: Publish to npm
-      #   run: npm publish --provenance
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        
+      - name: Publish to npm
+        run: npm publish --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install MCP Publisher
         run: |
