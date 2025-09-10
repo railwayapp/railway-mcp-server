@@ -18,12 +18,14 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         
-      - name: Install Node.js
+      - name: Install Node.js (sets registry + auth)
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@railway' 
+      
       - name: Setup Go (for mcp-publisher build)
         uses: actions/setup-go@v5
         with:
@@ -36,7 +38,7 @@ jobs:
         run: pnpm run build
       
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
