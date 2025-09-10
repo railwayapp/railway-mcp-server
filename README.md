@@ -1,9 +1,9 @@
-# Railway MCP Server (Experimental)
+# Railway MCP Server
 
 A Model Context Protocol (MCP) server for interacting with your Railway account. This is a local MCP server provides a set of opinionated workflows and tools for managing Railway resources.
 
 > [!IMPORTANT]
-> This is an experimental project (like really experimental). You should expect bugs and missing features. The MCP server doesn't include destructive actions by design, that said, you should still keep an eye on which tools and commands are being executed.
+> The MCP server doesn't include destructive actions by design, that said, you should still keep an eye on which tools and commands are being executed.
 
 ## Prerequisites
 
