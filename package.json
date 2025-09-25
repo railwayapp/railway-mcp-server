@@ -1,6 +1,6 @@
 {
   "name": "@railway/mcp-server",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "mcpName": "io.github.railwayapp/mcp-server",
   "description": "Official Railway MCP server",
   "author": "Railway",
