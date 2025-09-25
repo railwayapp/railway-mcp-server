@@ -8,13 +8,14 @@ type GetLogsOptions = {
   logType: "build" | "deploy";
   lines?: number;
   filter?: string;
+  json?: boolean;
 } & GetLogsOptionsType;
 
 export const getLogsTool = {
   name: "get-logs",
   title: "Get Railway Logs",
   description:
-    "Get build or deployment logs for the currently linked Railway project. You can optionally specify a deployment ID, service, and environment. If no deployment ID is provided, it will get logs from the latest deployment. The 'lines' and 'filter' parameters require Railway CLI v4.9.0+. Use 'lines' to limit the number of log lines (disables streaming) and 'filter' to search logs by terms or attributes (e.g., '@level:error', 'user', '@level:warn AND rate limit'). For older CLI versions, these parameters will be ignored and logs will stream.",
+    "Get build or deployment logs for the currently linked Railway project. You can optionally specify a deployment ID, service, and environment. If no deployment ID is provided, it will get logs from the latest deployment. The 'lines' and 'filter' parameters require Railway CLI v4.9.0+. Use 'lines' to limit the number of log lines (disables streaming) and 'filter' to search logs by terms or attributes (e.g., '@level:error', 'user', '@level:warn AND rate limit'). For older CLI versions, these parameters will be ignored and logs will stream. The 'json' parameter (default: true) formats output as JSON - set to false if you encounter token limits or want plain text output.",
   inputSchema: {
     workspacePath: z
       .string()
@@ -52,6 +53,12 @@ export const getLogsTool = {
       .describe(
         "Filter logs by search terms or attributes. Requires Railway CLI v4.9.0+. Examples: 'error', '@level:error', '@level:warn AND rate limit', 'user login', '@status:500'. See https://docs.railway.com/guides/logs for more info."
       ),
+    json: z
+      .boolean()
+      .optional()
+      .describe(
+        "JSON provides structured log data with more information (e.g. timestamps) but uses more tokens. Defaults to false to save tokens. Set to true for more detailed logs."
+      ),
   },
   handler: async ({
     workspacePath,
@@ -61,6 +68,7 @@ export const getLogsTool = {
     environment,
     lines,
     filter,
+    json = true,
   }: GetLogsOptions) => {
     try {
       const features = await getCliFeatureSupport();
@@ -84,6 +92,7 @@ export const getLogsTool = {
           environment,
           lines,
           filter,
+          json,
         });
       } else {
         result = await getRailwayDeployLogs({
@@ -93,6 +102,7 @@ export const getLogsTool = {
           environment,
           lines,
           filter,
+          json,
         });
       }
 

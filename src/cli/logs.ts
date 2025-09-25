@@ -3,22 +3,41 @@ import { getCliFeatureSupport } from "./version";
 import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
 
-export const buildLogCommand = async (
-  type: "deployment" | "build",
-  deploymentId?: string,
-  service?: string,
-  environment?: string,
-  lines?: number,
-  filter?: string
-): Promise<string> => {
-  const args = ["logs", `--${type}`, "--json"];
+type BuildLogCommandOptions = {
+  type: "deployment" | "build";
+  deploymentId?: string;
+  service?: string;
+  environment?: string;
+  lines?: number;
+  filter?: string;
+  json?: boolean;
+};
+
+export const buildLogCommand = async ({
+  type,
+  deploymentId,
+  service,
+  environment,
+  lines,
+  filter,
+  json = false,
+}: BuildLogCommandOptions): Promise<string> => {
+  const args = ["logs", `--${type}`];
+  if (json) {
+    args.push("--json");
+  }
+
   const features = await getCliFeatureSupport();
   const supportsLinesAndFilter =
     features.logs.args.lines && features.logs.args.filter;
 
   if (supportsLinesAndFilter) {
+    // JSON really eats the token limit up, so default to a low amount if that's
+    // turned on.
+    const defaultLines = json ? "100" : "500";
+
     // Always use --lines when specified to prevent streaming
-    args.push("--lines", lines ? lines.toString() : "100");
+    args.push("--lines", lines ? lines.toString() : defaultLines);
 
     if (filter) {
       args.push("--filter", `"${filter}"`);
@@ -32,13 +51,11 @@ export const buildLogCommand = async (
   return `railway ${args.join(" ")}`;
 };
 
-export type GetLogsOptions = {
+export type GetLogsOptions = Pick<
+  BuildLogCommandOptions,
+  "deploymentId" | "service" | "environment" | "lines" | "filter" | "json"
+> & {
   workspacePath: string;
-  deploymentId?: string;
-  service?: string;
-  environment?: string;
-  lines?: number;
-  filter?: string;
 };
 
 export const getRailwayDeployLogs = async ({
@@ -48,15 +65,17 @@ export const getRailwayDeployLogs = async ({
   environment,
   lines,
   filter,
+  json,
 }: GetLogsOptions): Promise<string> => {
-  const command = await buildLogCommand(
-    "deployment",
+  const command = await buildLogCommand({
+    type: "deployment",
     deploymentId,
     service,
     environment,
     lines,
-    filter
-  );
+    filter,
+    json,
+  });
 
   try {
     await checkRailwayCliStatus();
@@ -80,15 +99,17 @@ export const getRailwayBuildLogs = async ({
   environment,
   lines,
   filter,
+  json,
 }: GetLogsOptions): Promise<string> => {
-  const command = await buildLogCommand(
-    "build",
+  const command = await buildLogCommand({
+    type: "build",
     deploymentId,
     service,
     environment,
     lines,
-    filter
-  );
+    filter,
+    json,
+  });
   try {
     await checkRailwayCliStatus();
     const result = await getLinkedProjectInfo({ workspacePath });
