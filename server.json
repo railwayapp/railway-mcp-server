@@ -1,22 +1,22 @@
 {
-	"$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
-	"name": "io.github.railwayapp/mcp-server",
-	"description": "Official Railway MCP server",
-	"status": "active",
-	"repository": {
-		"url": "https://github.com/railwayapp/railway-mcp-server",
-		"source": "github"
-	},
-	"version": "0.1.5",
-	"packages": [
-		{
-			"registry_type": "npm",
-			"registry_base_url": "https://registry.npmjs.org",
-			"identifier": "@railway/mcp-server",
-			"version": "0.1.5",
-			"transport": {
-				"type": "stdio"
-			}
-		}
-	]
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "io.github.railwayapp/mcp-server",
+  "description": "Official Railway MCP server",
+  "status": "active",
+  "repository": {
+    "url": "https://github.com/railwayapp/railway-mcp-server",
+    "source": "github"
+  },
+  "version": "0.1.6",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@railway/mcp-server",
+      "version": "0.1.6",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
 }
