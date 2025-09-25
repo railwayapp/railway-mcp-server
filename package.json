@@ -23,7 +23,7 @@
     "railway-mcp-server": "dist/index.js"
   },
   "main": "dist/index.js",
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@9.15.2",
   "scripts": {
     "dev": "tsdown --watch --on-success \"chmod 755 dist/index.js\"",
     "build": "tsdown && chmod 755 dist/index.js",
