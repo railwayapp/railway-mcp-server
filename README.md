@@ -24,30 +24,30 @@ Alternatively, you can add the following configuration to `.cursor/mcp.json`
   "mcpServers": {
     "railway-mcp-server": {
       "command": "npx",
-      "args": ["-y", "@railway/mcp-server"],
+      "args": ["-y", "@railway/mcp-server"]
     }
   }
 }
 ```
 
-### VS Code: 
+### VS Code:
 
 Add the following configuration to `.vscode/mcp.json`
 
-   ```json
-   
-   {
-     "servers": {
-       "railway-mcp-server": {
-         "type": "stdio",
-         "command": "npx",
-         "args": ["-y", "@railway/mcp-server"],
-       }
-     }
-   }
-   ```
-   
+```json
+{
+  "servers": {
+    "railway-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@railway/mcp-server"]
+    }
+  }
+}
+```
+
 ### Claude Code:
+
 ```shell
 claude mcp add railway-mcp-server -- npx -y @railway/mcp-server
 ```
@@ -60,7 +60,6 @@ Creating a new project, deploying it, and generating a domain
 Create a Next.js app in this directory and deploy it to Railway. Make sure to also assign it a domain. Since we're starting from scratch, there is no need to pull information about the deployment or build for now
 ```
 
-
 Deploy a from a template (database, queue, etc.). Based on your prompt, the appropriate template will be selected and deployed. In case of multiple templates, the agent will pick the most appropriate one. Writing a detailed prompt will lead to a better selection. [Check out all of the available templates](https://railway.com/deploy).
 
 ```text
@@ -71,7 +70,6 @@ Deploy a Postgres database
 Deploy a single node Clickhouse database
 ```
 
-
 Pulling environment variables
 
 ```text
@@ -79,9 +77,14 @@ I would like to pull environment variables for my project and save them in a .en
 ```
 
 Creating a new environment and setting it as the current linked environment
+
 ```text
 I would like to create a new development environment called `development` where I can test my changes. This environment should duplicate production. Once the environment is created, I want to set it as my current linked environment
 ```
+
+## CLI Version Detection
+
+The MCP server automatically detects your Railway CLI version to use the appropriate features.
 
 ## Available MCP Tools
 
@@ -105,27 +108,31 @@ The Railway MCP Server provides the following tools for managing your Railway in
   - `generate-domain` - Generate a railway.app domain for a project
 - Monitoring & Logs
   - `get-logs` - Retrieve build or deployment logs for a service
-
+    - **Railway CLI v4.9.0+**: Supports `lines` parameter to limit output and `filter` parameter for searching logs
+    - **Older CLI versions**: Will stream logs without filtering capabilities
 
 ## Development
 
 ### Prerequisites
+
 - Node.js >= 20.0.0
 - pnpm >= 10.14.0
 
-
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/railwayapp/railway-mcp-server.git
    cd railway-mcp-server
    ```
 
 2. **Install dependencies**
+
    ```bash
    pnpm install
    ```
 
 3. **Start the development server**
+
    ```bash
    pnpm dev
    ```
@@ -133,9 +140,9 @@ The Railway MCP Server provides the following tools for managing your Railway in
    This command will generate a build under `dist/` and automatically rebuild after making changes.
 
 4. **Configure your MCP client**
-   
+
    Add the following configuration to your MCP client (e.g., Cursor, VSCode) and replace `/path/to/railway-mcp-server/dist/index.js` with the actual path to your built server.
-   
+
    Cursor: `.cursor/mcp.json`
 
    ```json
@@ -143,7 +150,7 @@ The Railway MCP Server provides the following tools for managing your Railway in
      "mcpServers": {
        "railway-mcp-server": {
          "command": "node",
-         "args": ["/path/to/railway-mcp-server/dist/index.js"],
+         "args": ["/path/to/railway-mcp-server/dist/index.js"]
        }
      }
    }
@@ -152,14 +159,19 @@ The Railway MCP Server provides the following tools for managing your Railway in
    VSCode: `.vscode/mcp.json`
 
    ```json
-   
    {
      "servers": {
        "railway-mcp-server": {
          "type": "stdio",
          "command": "node",
-         "args": ["/path/to/railway-mcp-server/dist/index.js"],
+         "args": ["/path/to/railway-mcp-server/dist/index.js"]
        }
      }
    }
+   ```
+
+   For Claude Code:
+
+   ```bash
+   claude mcp add railway-mcp-server node /path/to/railway-mcp-server/railway-mcp-server/dist/index.js
    ```
