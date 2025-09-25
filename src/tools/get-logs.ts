@@ -8,6 +8,7 @@ type GetLogsOptions = {
   logType: "build" | "deploy";
   lines?: number;
   filter?: string;
+  json?: boolean;
 } & GetLogsOptionsType;
 
 export const getLogsTool = {
@@ -52,6 +53,12 @@ export const getLogsTool = {
       .describe(
         "Filter logs by search terms or attributes. Requires Railway CLI v4.9.0+. Examples: 'error', '@level:error', '@level:warn AND rate limit', 'user login', '@status:500'. See https://docs.railway.com/guides/logs for more info."
       ),
+    json: z
+      .boolean()
+      .optional()
+      .describe(
+        "JSON provides structured log data with more information (e.g. timestamps) but uses more tokens. Defaults to false to save tokens. Set to true for more detailed logs."
+      ),
   },
   handler: async ({
     workspacePath,
@@ -61,6 +68,7 @@ export const getLogsTool = {
     environment,
     lines,
     filter,
+    json,
   }: GetLogsOptions) => {
     try {
       const features = await getCliFeatureSupport();
@@ -84,6 +92,7 @@ export const getLogsTool = {
           environment,
           lines,
           filter,
+          json,
         });
       } else {
         result = await getRailwayDeployLogs({
@@ -93,6 +102,7 @@ export const getLogsTool = {
           environment,
           lines,
           filter,
+          json,
         });
       }
 
