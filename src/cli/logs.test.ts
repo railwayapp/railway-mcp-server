@@ -77,7 +77,7 @@ describe("Railway Logs Module", () => {
 
       const command = await buildLogCommand("deployment");
 
-      expect(command).toBe("railway logs --deployment --json --lines 1000");
+      expect(command).toBe("railway logs --deployment --json --lines 100");
     });
 
     it("should not include lines/filter for older CLI versions", async () => {
