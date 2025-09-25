@@ -68,7 +68,7 @@ export const getLogsTool = {
     environment,
     lines,
     filter,
-    json = true,
+    json,
   }: GetLogsOptions) => {
     try {
       const features = await getCliFeatureSupport();
