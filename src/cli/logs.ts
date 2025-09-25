@@ -18,7 +18,7 @@ export const buildLogCommand = async (
 
   if (supportsLinesAndFilter) {
     // Always use --lines when specified to prevent streaming
-    args.push("--lines", lines ? lines.toString() : "1000");
+    args.push("--lines", lines ? lines.toString() : "100");
 
     if (filter) {
       args.push("--filter", `"${filter}"`);
