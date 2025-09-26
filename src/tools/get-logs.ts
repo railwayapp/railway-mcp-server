@@ -15,7 +15,7 @@ export const getLogsTool = {
   name: "get-logs",
   title: "Get Railway Logs",
   description:
-    "Get build or deployment logs for the currently linked Railway project. You can optionally specify a deployment ID, service, and environment. If no deployment ID is provided, it will get logs from the latest deployment. The 'lines' and 'filter' parameters require Railway CLI v4.9.0+. Use 'lines' to limit the number of log lines (disables streaming) and 'filter' to search logs by terms or attributes (e.g., '@level:error', 'user', '@level:warn AND rate limit'). For older CLI versions, these parameters will be ignored and logs will stream.",
+    "Get build or deployment logs for the currently linked Railway project. This will only pull the latest successful deployment by default, so if you need to inspect a failed build, you'll need to supply a deployment ID. You can optionally specify a deployment ID, service, and environment. If no deployment ID is provided, it will get logs from the latest deployment. The 'lines' and 'filter' parameters require Railway CLI v4.9.0+. Use 'lines' to limit the number of log lines (disables streaming) and 'filter' to search logs by terms or attributes (e.g., '@level:error', 'user', '@level:warn AND rate limit'). For older CLI versions, these parameters will be ignored and logs will stream.",
   inputSchema: {
     workspacePath: z
       .string()

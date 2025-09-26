@@ -1,114 +1,168 @@
-import {
-	checkRailwayCliStatus,
-	runRailwayCommand,
-	runRailwayJsonCommand,
-} from "./core";
+import { checkRailwayCliStatus, runRailwayCommand } from "./core";
 import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
 import { getRailwayServices } from "./services";
+import { getCliFeatureSupport, getRailwayVersion } from "./version";
 
 export type DeployOptions = {
-	workspacePath: string;
-	environment?: string;
-	service?: string;
-	ci?: boolean;
+  workspacePath: string;
+  environment?: string;
+  service?: string;
+  ci?: boolean;
 };
 
 export const deployRailwayProject = async ({
-	workspacePath,
-	environment,
-	service,
-	ci,
+  workspacePath,
+  environment,
+  service,
+  ci,
 }: DeployOptions): Promise<string> => {
-	try {
-		await checkRailwayCliStatus();
-		const result = await getLinkedProjectInfo({ workspacePath });
-		if (!result.success) {
-			throw new Error(result.error);
-		}
+  try {
+    await checkRailwayCliStatus();
+    const result = await getLinkedProjectInfo({ workspacePath });
+    if (!result.success) {
+      throw new Error(result.error);
+    }
 
-		// Build the railway up command with options
-		let command = "railway up";
+    // Build the railway up command with options
+    let command = "railway up";
 
-		if (ci) {
-			command += " --ci";
-		}
+    if (ci) {
+      command += " --ci";
+    }
 
-		if (environment) {
-			command += ` --environment ${environment}`;
-		}
+    if (environment) {
+      command += ` --environment ${environment}`;
+    }
 
-		if (service) {
-			command += ` --service ${service}`;
-		}
+    if (service) {
+      command += ` --service ${service}`;
+    }
 
-		const { output: deployOutput } = await runRailwayCommand(
-			command,
-			workspacePath,
-		);
+    const { output: deployOutput } = await runRailwayCommand(
+      command,
+      workspacePath
+    );
 
-		// After deployment, try to link a service if none is linked
-		try {
-			// Check if there are any services available
-			const servicesResult = await getRailwayServices({ workspacePath });
-			if (
-				servicesResult.success &&
-				servicesResult.services &&
-				servicesResult.services.length > 0
-			) {
-				// Link the first available service
-				const firstService = servicesResult.services[0];
-				const { output: linkOutput } = await runRailwayCommand(
-					`railway service ${firstService}`,
-					workspacePath,
-				);
-				return `${deployOutput}\n\nService linked: ${firstService}\n${linkOutput}`;
-			}
-		} catch (linkError) {
-			// If linking fails, just return the deployment output
-			console.warn(
-				"Warning: Could not automatically link service after deployment:",
-				linkError,
-			);
-		}
+    // After deployment, try to link a service if none is linked
+    try {
+      // Check if there are any services available
+      const servicesResult = await getRailwayServices({ workspacePath });
+      if (
+        servicesResult.success &&
+        servicesResult.services &&
+        servicesResult.services.length > 0
+      ) {
+        // Link the first available service
+        const firstService = servicesResult.services[0];
+        const { output: linkOutput } = await runRailwayCommand(
+          `railway service ${firstService}`,
+          workspacePath
+        );
+        return `${deployOutput}\n\nService linked: ${firstService}\n${linkOutput}`;
+      }
+    } catch (linkError) {
+      // If linking fails, just return the deployment output
+      console.warn(
+        "Warning: Could not automatically link service after deployment:",
+        linkError
+      );
+    }
 
-		return deployOutput;
-	} catch (error: unknown) {
-		return analyzeRailwayError(error, "railway up");
-	}
+    return deployOutput;
+  } catch (error: unknown) {
+    return analyzeRailwayError(error, "railway up");
+  }
 };
 
-export type GenerateDomainOptions = {
-	workspacePath: string;
-	service?: string;
+export type ListDeploymentsOptions = {
+  workspacePath: string;
+  service?: string;
+  environment?: string;
+  limit?: number;
+  json?: boolean;
 };
 
-export const generateRailwayDomain = async ({
-	workspacePath,
-	service,
-}: GenerateDomainOptions): Promise<string> => {
-	try {
-		await checkRailwayCliStatus();
-		const projectResult = await getLinkedProjectInfo({ workspacePath });
-		if (!projectResult.success) {
-			throw new Error(projectResult.error);
-		}
+export type Deployment = {
+  id: string;
+  status: string;
+  createdAt: string;
+  commitMessage?: string;
+  commitAuthor?: string;
+  branch?: string;
+  serviceName?: string;
+  environmentName?: string;
+};
 
-		// Build the railway domain command with options
-		let command = "railway domain --json";
+export const listDeployments = async ({
+  workspacePath,
+  service,
+  environment,
+  limit = 20,
+  json = false,
+}: ListDeploymentsOptions): Promise<
+  | {
+      success: true;
+      output: string;
+    }
+  | {
+      success: false;
+      error: string;
+    }
+> => {
+  try {
+    await checkRailwayCliStatus();
 
-		if (service) {
-			command += ` --service ${service}`;
-		}
+    const featureSupport = await getCliFeatureSupport();
+    if (!featureSupport.deployment.list) {
+      const version = await getRailwayVersion();
+      return {
+        success: false,
+        error: `Railway CLI version ${
+          version || "unknown"
+        } does not support 'deployment list' command. Please upgrade to version 4.10.0 or later.`,
+      };
+    }
 
-		const domainResult = await runRailwayJsonCommand(command, workspacePath);
+    const projectResult = await getLinkedProjectInfo({ workspacePath });
+    if (!projectResult.success) {
+      return {
+        success: false,
+        error: projectResult.error ?? "Failed to get project info",
+      };
+    }
 
-		if (domainResult.domain) {
-			return domainResult.domain;
-		}
+    let command = "railway deployment list";
 
-		throw new Error("No domain found in Railway CLI JSON response");
-	} catch (error: unknown) {
-		return analyzeRailwayError(error, "railway domain --json");
-	}
+    if (service) {
+      command += ` --service ${service}`;
+    }
+
+    if (environment) {
+      command += ` --environment ${environment}`;
+    }
+
+    if (limit) {
+      command += ` --limit ${limit}`;
+    }
+
+    if (json) {
+      command += " --json";
+    }
+
+    const { output } = await runRailwayCommand(command, workspacePath);
+    return { success: true, output };
+  } catch (error: unknown) {
+    try {
+      analyzeRailwayError(error, "railway deployment list");
+      // This line should never be reached since analyzeRailwayError always throws
+      return { success: false, error: "Unknown error" };
+    } catch (analyzedError: unknown) {
+      const errorMessage =
+        analyzedError instanceof Error
+          ? analyzedError.message
+          : String(analyzedError);
+      return { success: false, error: errorMessage };
+    }
+  }
 };

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { buildLogCommand } from "./logs";
 
 vi.mock("./version", () => ({
@@ -15,6 +15,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -38,6 +41,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -61,6 +67,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -78,6 +87,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -96,6 +108,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: false,
@@ -117,6 +132,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -137,6 +155,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -161,6 +182,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -187,6 +211,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -208,6 +235,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
@@ -229,6 +259,9 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
         logs: {
           args: {
             lines: true,
