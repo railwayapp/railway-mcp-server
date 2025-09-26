@@ -153,16 +153,6 @@ export const listDeployments = async ({
     const { output } = await runRailwayCommand(command, workspacePath);
     return { success: true, output };
   } catch (error: unknown) {
-    try {
-      analyzeRailwayError(error, "railway deployment list");
-      // This line should never be reached since analyzeRailwayError always throws
-      return { success: false, error: "Unknown error" };
-    } catch (analyzedError: unknown) {
-      const errorMessage =
-        analyzedError instanceof Error
-          ? analyzedError.message
-          : String(analyzedError);
-      return { success: false, error: errorMessage };
-    }
+    return analyzeRailwayError(error, `railway deployment list`);
   }
 };
