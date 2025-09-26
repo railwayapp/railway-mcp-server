@@ -7,6 +7,7 @@ export { generateDomainTool } from "./generate-domain";
 export { getLogsTool } from "./get-logs";
 export { linkEnvironmentTool } from "./link-environment";
 export { linkServiceTool } from "./link-service";
+export { listDeploymentsTool } from "./list-deployments";
 export { listProjectsTool } from "./list-projects";
 export { listServicesTool } from "./list-services";
 export { listVariablesTool } from "./list-variables";

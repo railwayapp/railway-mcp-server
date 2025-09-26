@@ -29,7 +29,7 @@ export const getRailwayVersion = async (): Promise<string | null> => {
       versionCacheTime = Date.now();
       return cachedVersion;
     }
-  } catch (error) {
+  } catch (_error) {
     // Unable to determine version
   }
 
@@ -63,6 +63,9 @@ export type CliFeatureSupport = {
       filter: boolean;
     };
   };
+  deployment: {
+    list: boolean;
+  };
 };
 
 /** Get Railway CLI feature support based on version */
@@ -70,6 +73,7 @@ export const getCliFeatureSupport = async (): Promise<CliFeatureSupport> => {
   const version = await getRailwayVersion();
 
   const supportsLogFeatures = version ? semver.gte(version, "4.9.0") : false;
+  const supportsDeploymentList = version ? semver.gte(version, "4.10.0") : false;
 
   return {
     logs: {
@@ -77,6 +81,9 @@ export const getCliFeatureSupport = async (): Promise<CliFeatureSupport> => {
         lines: supportsLogFeatures,
         filter: supportsLogFeatures,
       },
+    },
+    deployment: {
+      list: supportsDeploymentList,
     },
   };
 };
