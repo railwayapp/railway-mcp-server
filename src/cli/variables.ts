@@ -1,6 +1,7 @@
 import { checkRailwayCliStatus, runRailwayCommand } from "./core";
 import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
+import { quoteArg } from "../utils";
 
 export type ListVariablesOptions = {
 	workspacePath: string;
@@ -27,10 +28,10 @@ export const listRailwayVariables = async ({
 		let command = "railway variables";
 
 		if (service) {
-			command += ` --service ${service}`;
+			command += ` --service ${quoteArg(service)}`;
 		}
 		if (environment) {
-			command += ` --environment ${environment}`;
+			command += ` --environment ${quoteArg(environment)}`;
 		}
 		if (kv) {
 			command += " --kv";
@@ -71,10 +72,10 @@ export const setRailwayVariables = async ({
 		let command = "railway variables";
 
 		if (service) {
-			command += ` --service ${service}`;
+			command += ` --service ${quoteArg(service)}`;
 		}
 		if (environment) {
-			command += ` --environment ${environment}`;
+			command += ` --environment ${quoteArg(environment)}`;
 		}
 		if (skipDeploys) {
 			command += " --skip-deploys";

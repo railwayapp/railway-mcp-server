@@ -1,6 +1,7 @@
 import { checkRailwayCliStatus, runRailwayCommand } from "./core";
 import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
+import { quoteArg } from "../utils";
 
 export type GetServicesOptions = {
 	workspacePath: string;
@@ -58,7 +59,7 @@ export const linkRailwayService = async ({
 		}
 
 		const { output } = await runRailwayCommand(
-			`railway service ${serviceName}`,
+			`railway service ${quoteArg(serviceName)}`,
 			workspacePath,
 		);
 

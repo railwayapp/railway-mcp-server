@@ -5,6 +5,7 @@ import {
 } from "./core";
 import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
+import { quoteArg } from "../utils";
 
 export type GetCurrentEnvironmentIdOptions = {
 	workspacePath: string;
@@ -77,7 +78,7 @@ export const linkRailwayEnvironment = async ({
 		}
 
 		const command = environmentName
-			? `railway environment ${environmentName}`
+			? `railway environment ${quoteArg(environmentName)}`
 			: "railway environment";
 		const { output } = await runRailwayCommand(command, workspacePath);
 
@@ -107,15 +108,15 @@ export const createRailwayEnvironment = async ({
 			throw new Error(result.error);
 		}
 
-		let command = `railway environment new ${environmentName}`;
+		let command = `railway environment new ${quoteArg(environmentName)}`;
 
 		if (duplicateEnvironment) {
-			command += ` --duplicate ${duplicateEnvironment}`;
+			command += ` --duplicate ${quoteArg(duplicateEnvironment)}`;
 		}
 
 		if (serviceVariables && serviceVariables.length > 0) {
 			for (const sv of serviceVariables) {
-				command += ` --service-variable ${sv.service} ${sv.variable}`;
+				command += ` --service-variable ${quoteArg(sv.service)} ${quoteArg(sv.variable)}`;
 			}
 		}
 

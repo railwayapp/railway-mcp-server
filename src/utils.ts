@@ -21,3 +21,9 @@ export const getVersion = (): string => {
 export const createToolResponse = (text: string) => ({
 	content: [{ type: "text" as const, text }],
 });
+
+/**
+ * Quotes a shell argument to handle spaces and special characters.
+ * Returns the argument wrapped in double quotes.
+ */
+export const quoteArg = (arg: string): string => `"${arg}"`;
