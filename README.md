@@ -11,6 +11,12 @@ The [Railway CLI](https://docs.railway.com/guides/cli) is required for this serv
 
 ## Installation
 
+You can install the MCP server by running the following command:
+
+```bash
+npx add-mcp @railway/mcp-server
+```
+
 ### Cursor
 
 You can add the Railway MCP Server to Cursor by clicking the button below.
