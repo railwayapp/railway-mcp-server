@@ -3,6 +3,7 @@ import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
 import { getRailwayServices } from "./services";
 import { getCliFeatureSupport, getRailwayVersion } from "./version";
+import { quoteArg } from "../utils";
 
 export type DeployOptions = {
   workspacePath: string;
@@ -32,11 +33,11 @@ export const deployRailwayProject = async ({
     }
 
     if (environment) {
-      command += ` --environment ${environment}`;
+      command += ` --environment ${quoteArg(environment)}`;
     }
 
     if (service) {
-      command += ` --service ${service}`;
+      command += ` --service ${quoteArg(service)}`;
     }
 
     const { output: deployOutput } = await runRailwayCommand(
@@ -56,7 +57,7 @@ export const deployRailwayProject = async ({
         // Link the first available service
         const firstService = servicesResult.services[0];
         const { output: linkOutput } = await runRailwayCommand(
-          `railway service ${firstService}`,
+          `railway service ${quoteArg(firstService)}`,
           workspacePath
         );
         return `${deployOutput}\n\nService linked: ${firstService}\n${linkOutput}`;
@@ -135,11 +136,11 @@ export const listDeployments = async ({
     let command = "railway deployment list";
 
     if (service) {
-      command += ` --service ${service}`;
+      command += ` --service ${quoteArg(service)}`;
     }
 
     if (environment) {
-      command += ` --environment ${environment}`;
+      command += ` --environment ${quoteArg(environment)}`;
     }
 
     if (limit) {

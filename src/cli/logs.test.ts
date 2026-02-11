@@ -174,7 +174,7 @@ describe("Railway Logs Module", () => {
       });
 
       expect(command).toBe(
-        "railway logs --deployment --lines 50 --service api --environment production"
+        'railway logs --deployment --lines 50 --service "api" --environment "production"'
       );
     });
 
@@ -203,7 +203,7 @@ describe("Railway Logs Module", () => {
       });
 
       expect(command).toBe(
-        'railway logs --build --lines 75 --filter "timeout" deploy-456 --service backend --environment staging'
+        'railway logs --build --lines 75 --filter "timeout" deploy-456 --service "backend" --environment "staging"'
       );
     });
 

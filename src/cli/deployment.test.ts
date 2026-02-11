@@ -88,7 +88,7 @@ describe("listDeployments", () => {
 
       expect(result.success).toBe(true);
       expect(core.runRailwayCommand).toHaveBeenCalledWith(
-        "railway deployment list --service my-api-service --limit 20",
+        'railway deployment list --service "my-api-service" --limit 20',
         mockWorkspacePath
       );
     });
@@ -108,7 +108,7 @@ describe("listDeployments", () => {
 
       expect(result.success).toBe(true);
       expect(core.runRailwayCommand).toHaveBeenCalledWith(
-        "railway deployment list --environment staging --limit 20",
+        'railway deployment list --environment "staging" --limit 20',
         mockWorkspacePath
       );
     });

@@ -1,6 +1,7 @@
 import { checkRailwayCliStatus, runRailwayJsonCommand } from "./core";
 import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
+import { quoteArg } from "../utils";
 
 export type GenerateDomainOptions = {
   workspacePath: string;
@@ -22,7 +23,7 @@ export const generateRailwayDomain = async ({
     let command = "railway domain --json";
 
     if (service) {
-      command += ` --service ${service}`;
+      command += ` --service ${quoteArg(service)}`;
     }
 
     const domainResult = await runRailwayJsonCommand(command, workspacePath);

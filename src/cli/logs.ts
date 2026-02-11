@@ -2,6 +2,7 @@ import { checkRailwayCliStatus, runRailwayCommand } from "./core";
 import { getCliFeatureSupport } from "./version";
 import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
+import { quoteArg } from "../utils";
 
 type BuildLogCommandOptions = {
   type: "deployment" | "build";
@@ -45,8 +46,8 @@ export const buildLogCommand = async ({
   }
 
   if (deploymentId) args.push(deploymentId);
-  if (service) args.push("--service", service);
-  if (environment) args.push("--environment", environment);
+  if (service) args.push("--service", quoteArg(service));
+  if (environment) args.push("--environment", quoteArg(environment));
 
   return `railway ${args.join(" ")}`;
 };
