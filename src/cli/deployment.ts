@@ -1,7 +1,6 @@
 import { checkRailwayCliStatus, runRailwayCommand } from "./core";
 import { analyzeRailwayError } from "./error-handling";
 import { getLinkedProjectInfo } from "./projects";
-import { getRailwayServices } from "./services";
 import { getCliFeatureSupport, getRailwayVersion } from "./version";
 
 export type DeployOptions = {
@@ -44,29 +43,21 @@ export const deployRailwayProject = async ({
       workspacePath
     );
 
-    // After deployment, try to link a service if none is linked
-    try {
-      // Check if there are any services available
-      const servicesResult = await getRailwayServices({ workspacePath });
-      if (
-        servicesResult.success &&
-        servicesResult.services &&
-        servicesResult.services.length > 0
-      ) {
-        // Link the first available service
-        const firstService = servicesResult.services[0];
+    // After deployment, re-link the service that was just deployed (if specified)
+    if (service) {
+      try {
         const { output: linkOutput } = await runRailwayCommand(
-          `railway service ${firstService}`,
+          `railway service ${service}`,
           workspacePath
         );
-        return `${deployOutput}\n\nService linked: ${firstService}\n${linkOutput}`;
+        return `${deployOutput}\n\nService linked: ${service}\n${linkOutput}`;
+      } catch (linkError) {
+        // If linking fails, just return the deployment output
+        console.warn(
+          "Warning: Could not automatically link service after deployment:",
+          linkError
+        );
       }
-    } catch (linkError) {
-      // If linking fails, just return the deployment output
-      console.warn(
-        "Warning: Could not automatically link service after deployment:",
-        linkError
-      );
     }
 
     return deployOutput;
