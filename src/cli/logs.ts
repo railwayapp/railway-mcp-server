@@ -11,6 +11,8 @@ type BuildLogCommandOptions = {
   lines?: number;
   filter?: string;
   json?: boolean;
+  since?: string;
+  until?: string;
 };
 
 export const buildLogCommand = async ({
@@ -21,6 +23,8 @@ export const buildLogCommand = async ({
   lines,
   filter,
   json = false,
+  since,
+  until,
 }: BuildLogCommandOptions): Promise<string> => {
   const args = ["logs", `--${type}`];
   if (json) {
@@ -44,6 +48,8 @@ export const buildLogCommand = async ({
     }
   }
 
+  if (since) args.push("--since", since);
+  if (until) args.push("--until", until);
   if (deploymentId) args.push(deploymentId);
   if (service) args.push("--service", service);
   if (environment) args.push("--environment", environment);
@@ -53,7 +59,7 @@ export const buildLogCommand = async ({
 
 export type GetLogsOptions = Pick<
   BuildLogCommandOptions,
-  "deploymentId" | "service" | "environment" | "lines" | "filter" | "json"
+  "deploymentId" | "service" | "environment" | "lines" | "filter" | "json" | "since" | "until"
 > & {
   workspacePath: string;
 };
@@ -66,6 +72,8 @@ export const getRailwayDeployLogs = async ({
   lines,
   filter,
   json,
+  since,
+  until,
 }: GetLogsOptions): Promise<string> => {
   const command = await buildLogCommand({
     type: "deployment",
@@ -75,6 +83,8 @@ export const getRailwayDeployLogs = async ({
     lines,
     filter,
     json,
+    since,
+    until,
   });
 
   try {
@@ -100,6 +110,8 @@ export const getRailwayBuildLogs = async ({
   lines,
   filter,
   json,
+  since,
+  until,
 }: GetLogsOptions): Promise<string> => {
   const command = await buildLogCommand({
     type: "build",
@@ -109,6 +121,8 @@ export const getRailwayBuildLogs = async ({
     lines,
     filter,
     json,
+    since,
+    until,
   });
   try {
     await checkRailwayCliStatus();

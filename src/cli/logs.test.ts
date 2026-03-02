@@ -278,5 +278,111 @@ describe("Railway Logs Module", () => {
 
       expect(command).toBe("railway logs --deployment --json --lines 100");
     });
+
+    it("should include --since when provided", async () => {
+      const { getCliFeatureSupport } = await import("./version");
+
+      vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
+        logs: {
+          args: {
+            lines: true,
+            filter: true,
+          },
+        },
+      });
+
+      const command = await buildLogCommand({
+        type: "deployment",
+        since: "2h",
+      });
+
+      expect(command).toBe("railway logs --deployment --lines 500 --since 2h");
+    });
+
+    it("should include --until when provided", async () => {
+      const { getCliFeatureSupport } = await import("./version");
+
+      vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
+        logs: {
+          args: {
+            lines: true,
+            filter: true,
+          },
+        },
+      });
+
+      const command = await buildLogCommand({
+        type: "deployment",
+        until: "1h",
+      });
+
+      expect(command).toBe(
+        "railway logs --deployment --lines 500 --until 1h"
+      );
+    });
+
+    it("should include both --since and --until for time window queries", async () => {
+      const { getCliFeatureSupport } = await import("./version");
+
+      vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
+        logs: {
+          args: {
+            lines: true,
+            filter: true,
+          },
+        },
+      });
+
+      const command = await buildLogCommand({
+        type: "deployment",
+        since: "2024-01-15T10:00:00Z",
+        until: "2024-01-15T11:00:00Z",
+        lines: 200,
+        json: true,
+      });
+
+      expect(command).toBe(
+        "railway logs --deployment --json --lines 200 --since 2024-01-15T10:00:00Z --until 2024-01-15T11:00:00Z"
+      );
+    });
+
+    it("should include --since and --until with all other parameters", async () => {
+      const { getCliFeatureSupport } = await import("./version");
+
+      vi.mocked(getCliFeatureSupport).mockResolvedValue({
+        deployment: {
+          list: true,
+        },
+        logs: {
+          args: {
+            lines: true,
+            filter: true,
+          },
+        },
+      });
+
+      const command = await buildLogCommand({
+        type: "deployment",
+        service: "api",
+        environment: "production",
+        since: "1d",
+        until: "12h",
+        lines: 100,
+        filter: "@level:error",
+      });
+
+      expect(command).toBe(
+        'railway logs --deployment --lines 100 --filter "@level:error" --since 1d --until 12h --service api --environment production'
+      );
+    });
   });
 });
