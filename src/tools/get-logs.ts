@@ -9,13 +9,15 @@ type GetLogsOptions = {
   lines?: number;
   filter?: string;
   json?: boolean;
+  since?: string;
+  until?: string;
 } & GetLogsOptionsType;
 
 export const getLogsTool = {
   name: "get-logs",
   title: "Get Railway Logs",
   description:
-    "Get build or deployment logs for the currently linked Railway project. This will only pull the latest successful deployment by default, so if you need to inspect a failed build, you'll need to supply a deployment ID. You can optionally specify a deployment ID, service, and environment. If no deployment ID is provided, it will get logs from the latest deployment. The 'lines' and 'filter' parameters require Railway CLI v4.9.0+. Use 'lines' to limit the number of log lines (disables streaming) and 'filter' to search logs by terms or attributes (e.g., '@level:error', 'user', '@level:warn AND rate limit'). For older CLI versions, these parameters will be ignored and logs will stream.",
+    "Get build or deployment logs for the currently linked Railway project. This will only pull the latest successful deployment by default, so if you need to inspect a failed build, you'll need to supply a deployment ID. You can optionally specify a deployment ID, service, and environment. If no deployment ID is provided, it will get logs from the latest deployment. Use 'since' and 'until' to query logs across deployments within a time range — this is essential for investigating past incidents where the deployment has since been replaced. The 'lines' and 'filter' parameters require Railway CLI v4.9.0+. Use 'lines' to limit the number of log lines (disables streaming) and 'filter' to search logs by terms or attributes (e.g., '@level:error', 'user', '@level:warn AND rate limit'). For older CLI versions, these parameters will be ignored and logs will stream.",
   inputSchema: {
     workspacePath: z
       .string()
@@ -59,6 +61,18 @@ export const getLogsTool = {
       .describe(
         "JSON provides structured log data with more information (e.g. timestamps) but uses more tokens. Defaults to false to save tokens. Set to true for more detailed logs."
       ),
+    since: z
+      .string()
+      .optional()
+      .describe(
+        "Show logs since a specific time (disables streaming). Accepts relative times (e.g., '30s', '5m', '2h', '1d', '1w') or ISO 8601 timestamps (e.g., '2024-01-15T10:30:00Z'). Useful for investigating past incidents across deployments."
+      ),
+    until: z
+      .string()
+      .optional()
+      .describe(
+        "Show logs until a specific time (disables streaming). Same formats as 'since'. Use together with 'since' to define a time window for investigation."
+      ),
   },
   handler: async ({
     workspacePath,
@@ -69,6 +83,8 @@ export const getLogsTool = {
     lines,
     filter,
     json,
+    since,
+    until,
   }: GetLogsOptions) => {
     try {
       const features = await getCliFeatureSupport();
@@ -93,6 +109,8 @@ export const getLogsTool = {
           lines,
           filter,
           json,
+          since,
+          until,
         });
       } else {
         result = await getRailwayDeployLogs({
@@ -103,6 +121,8 @@ export const getLogsTool = {
           lines,
           filter,
           json,
+          since,
+          until,
         });
       }
 
