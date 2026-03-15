@@ -1,0 +1,23 @@
+{
+  "name": "railwayapp/railway-mcp-server",
+  "description": "Official Railway MCP server",
+  "accepts": [
+    {
+      "network": "eip155:8453",
+      "asset": "USDC",
+      "address": "YOUR_WALLET_ADDRESS"
+    }
+  ],
+  "resources": [
+    {
+      "path": "/railway",
+      "price": "0.01",
+      "description": "Pay-per-call access to railway"
+    },
+    {
+      "path": "/modelcontextprotocol",
+      "price": "0.01",
+      "description": "Pay-per-call access to modelcontextprotocol"
+    }
+  ]
+}
