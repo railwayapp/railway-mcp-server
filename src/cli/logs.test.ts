@@ -33,7 +33,7 @@ describe("Railway Logs Module", () => {
       });
 
       expect(command).toBe(
-        'railway logs --deployment --lines 100 --filter "error"'
+        "railway logs --deployment --lines 100 --filter error"
       );
     });
 
@@ -59,7 +59,7 @@ describe("Railway Logs Module", () => {
       });
 
       expect(command).toBe(
-        'railway logs --build --lines 200 --filter "warning"'
+        "railway logs --build --lines 200 --filter warning"
       );
     });
 
@@ -203,7 +203,7 @@ describe("Railway Logs Module", () => {
       });
 
       expect(command).toBe(
-        'railway logs --build --lines 75 --filter "timeout" deploy-456 --service backend --environment staging'
+        "railway logs --build --lines 75 --filter timeout deploy-456 --service backend --environment staging"
       );
     });
 

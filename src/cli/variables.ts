@@ -82,7 +82,7 @@ export const setRailwayVariables = async ({
 
 		// Add each variable with --set flag
 		variables.forEach((variable) => {
-			command += ` --set "${variable}"`;
+			command += ` --set ${variable}`;
 		});
 
 		const { output } = await runRailwayCommand(command, workspacePath);

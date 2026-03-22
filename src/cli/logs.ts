@@ -40,7 +40,7 @@ export const buildLogCommand = async ({
     args.push("--lines", lines ? lines.toString() : defaultLines);
 
     if (filter) {
-      args.push("--filter", `"${filter}"`);
+      args.push("--filter", filter);
     }
   }
 
