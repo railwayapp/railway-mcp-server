@@ -1,12 +1,15 @@
-import { exec } from "node:child_process";
+import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { analyzeRailwayError } from "./error-handling";
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
-export const runRailwayCommand = async (command: string, cwd?: string) => {
-  const { stdout, stderr } = await execAsync(command, { cwd });
-  return { stdout, stderr, output: stdout + stderr };
+export const runRailwayCommand = async (command: string, cwd?: string) => {  
+  const parts = command.split(' ');  
+  const [cmd, ...args] = parts;  
+    
+  const { stdout, stderr } = await execFileAsync(cmd, args, { cwd }); 
+  return { stdout, stderr, output: stdout + stderr };  
 };
 
 export const runRailwayJsonCommand = async (command: string, cwd?: string) => {
