@@ -34,9 +34,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       
-      - name: Build package  
+      - name: Build package
         run: pnpm run build
-        
+
+      - name: Upgrade npm (Trusted Publishing requires npm >= 11.5.1)
+        run: npm install -g npm@11.14.1
+
       - name: Publish to npm
         run: npm publish --provenance --access public
 
