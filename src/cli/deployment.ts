@@ -24,45 +24,31 @@ export const deployRailwayProject = async ({
       throw new Error(result.error);
     }
 
-    // Build the railway up command with options
-    let command = "railway up";
-
-    if (ci) {
-      command += " --ci";
-    }
-
-    if (environment) {
-      command += ` --environment ${environment}`;
-    }
-
-    if (service) {
-      command += ` --service ${service}`;
-    }
+    const args = ["up"];
+    if (ci) args.push("--ci");
+    if (environment) args.push("--environment", environment);
+    if (service) args.push("--service", service);
 
     const { output: deployOutput } = await runRailwayCommand(
-      command,
+      args,
       workspacePath
     );
 
-    // After deployment, try to link a service if none is linked
     try {
-      // Check if there are any services available
       const servicesResult = await getRailwayServices({ workspacePath });
       if (
         servicesResult.success &&
         servicesResult.services &&
         servicesResult.services.length > 0
       ) {
-        // Link the first available service
         const firstService = servicesResult.services[0];
         const { output: linkOutput } = await runRailwayCommand(
-          `railway service ${firstService}`,
+          ["service", firstService],
           workspacePath
         );
         return `${deployOutput}\n\nService linked: ${firstService}\n${linkOutput}`;
       }
     } catch (linkError) {
-      // If linking fails, just return the deployment output
       console.warn(
         "Warning: Could not automatically link service after deployment:",
         linkError
@@ -132,25 +118,13 @@ export const listDeployments = async ({
       };
     }
 
-    let command = "railway deployment list";
+    const args = ["deployment", "list"];
+    if (service) args.push("--service", service);
+    if (environment) args.push("--environment", environment);
+    if (limit) args.push("--limit", String(limit));
+    if (json) args.push("--json");
 
-    if (service) {
-      command += ` --service ${service}`;
-    }
-
-    if (environment) {
-      command += ` --environment ${environment}`;
-    }
-
-    if (limit) {
-      command += ` --limit ${limit}`;
-    }
-
-    if (json) {
-      command += " --json";
-    }
-
-    const { output } = await runRailwayCommand(command, workspacePath);
+    const { output } = await runRailwayCommand(args, workspacePath);
     return { success: true, output };
   } catch (error: unknown) {
     return analyzeRailwayError(error, `railway deployment list`);

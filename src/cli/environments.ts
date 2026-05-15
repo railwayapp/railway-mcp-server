@@ -20,14 +20,11 @@ export const getCurrentEnvironmentId = async ({
 			throw new Error(result.error);
 		}
 
-		// First, get the current environment name from railway status
 		const { output: statusOutput } = await runRailwayCommand(
-			"railway status",
+			["status"],
 			workspacePath,
 		);
 
-		// Parse the output to extract current environment name
-		// The output format is typically: "Environment: production"
 		const envNameMatch = statusOutput.match(/Environment:\s+(\w+)/);
 		if (!envNameMatch?.[1]) {
 			throw new Error("Could not determine current environment name");
@@ -35,13 +32,11 @@ export const getCurrentEnvironmentId = async ({
 
 		const currentEnvironmentName = envNameMatch[1];
 
-		// Get detailed environment information using railway status --json
 		const statusData = await runRailwayJsonCommand(
-			"railway status --json",
+			["status", "--json"],
 			workspacePath,
 		);
 
-		// Find the environment ID that matches the current environment name
 		if (statusData.environments?.edges?.length > 0) {
 			for (const envEdge of statusData.environments.edges) {
 				const env = envEdge.node;
@@ -51,7 +46,6 @@ export const getCurrentEnvironmentId = async ({
 			}
 		}
 
-		// If we can't find the environment ID, throw an error
 		throw new Error(
 			`Could not determine environment ID for environment: ${currentEnvironmentName}`,
 		);
@@ -76,10 +70,10 @@ export const linkRailwayEnvironment = async ({
 			throw new Error(result.error);
 		}
 
-		const command = environmentName
-			? `railway environment ${environmentName}`
-			: "railway environment";
-		const { output } = await runRailwayCommand(command, workspacePath);
+		const args = environmentName
+			? ["environment", environmentName]
+			: ["environment"];
+		const { output } = await runRailwayCommand(args, workspacePath);
 
 		return output;
 	} catch (error: unknown) {
@@ -107,19 +101,19 @@ export const createRailwayEnvironment = async ({
 			throw new Error(result.error);
 		}
 
-		let command = `railway environment new ${environmentName}`;
+		const args = ["environment", "new", environmentName];
 
 		if (duplicateEnvironment) {
-			command += ` --duplicate ${duplicateEnvironment}`;
+			args.push("--duplicate", duplicateEnvironment);
 		}
 
 		if (serviceVariables && serviceVariables.length > 0) {
 			for (const sv of serviceVariables) {
-				command += ` --service-variable ${sv.service} ${sv.variable}`;
+				args.push("--service-variable", sv.service, sv.variable);
 			}
 		}
 
-		const { output } = await runRailwayCommand(command, workspacePath);
+		const { output } = await runRailwayCommand(args, workspacePath);
 
 		return output;
 	} catch (error: unknown) {

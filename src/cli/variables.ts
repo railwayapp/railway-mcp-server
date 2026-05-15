@@ -24,22 +24,14 @@ export const listRailwayVariables = async ({
 			throw new Error(result.error);
 		}
 
-		let command = "railway variables";
+		const args = ["variables"];
 
-		if (service) {
-			command += ` --service ${service}`;
-		}
-		if (environment) {
-			command += ` --environment ${environment}`;
-		}
-		if (kv) {
-			command += " --kv";
-		}
-		if (json) {
-			command += " --json";
-		}
+		if (service) args.push("--service", service);
+		if (environment) args.push("--environment", environment);
+		if (kv) args.push("--kv");
+		if (json) args.push("--json");
 
-		const { output } = await runRailwayCommand(command, workspacePath);
+		const { output } = await runRailwayCommand(args, workspacePath);
 		return output;
 	} catch (error: unknown) {
 		return analyzeRailwayError(error, "railway variables");
@@ -68,24 +60,17 @@ export const setRailwayVariables = async ({
 			throw new Error(result.error);
 		}
 
-		let command = "railway variables";
+		const args = ["variables"];
 
-		if (service) {
-			command += ` --service ${service}`;
-		}
-		if (environment) {
-			command += ` --environment ${environment}`;
-		}
-		if (skipDeploys) {
-			command += " --skip-deploys";
+		if (service) args.push("--service", service);
+		if (environment) args.push("--environment", environment);
+		if (skipDeploys) args.push("--skip-deploys");
+
+		for (const variable of variables) {
+			args.push("--set", variable);
 		}
 
-		// Add each variable with --set flag
-		variables.forEach((variable) => {
-			command += ` --set "${variable}"`;
-		});
-
-		const { output } = await runRailwayCommand(command, workspacePath);
+		const { output } = await runRailwayCommand(args, workspacePath);
 		return output;
 	} catch (error: unknown) {
 		return analyzeRailwayError(error, "railway variables --set");

@@ -20,7 +20,7 @@ export const getRailwayVersion = async (): Promise<string | null> => {
   }
 
   try {
-    const { stdout } = await runRailwayCommand("railway --version");
+    const { stdout } = await runRailwayCommand(["--version"]);
     // Use semver.coerce to extract a valid semver from various formats
     // This handles "railway 4.9.0", "railway version 4.9.0", "4.9.0", etc.
     const version = semver.coerce(stdout);

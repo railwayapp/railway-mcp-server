@@ -43,7 +43,7 @@ export const getLinkedProjectInfo = async ({
 	try {
 		await checkRailwayCliStatus();
 		const project = await runRailwayJsonCommand(
-			"railway status --json",
+			["status", "--json"],
 			workspacePath,
 		);
 
@@ -55,7 +55,6 @@ export const getLinkedProjectInfo = async ({
 	} catch (error: unknown) {
 		const errorMessage = error instanceof Error ? error.message : String(error);
 
-		// Check if it's a "no linked project" error
 		if (ERROR_PATTERNS.NO_LINKED_PROJECT.test(errorMessage)) {
 			return {
 				success: false,
@@ -71,7 +70,7 @@ export const getLinkedProjectInfo = async ({
 export const listRailwayProjects = async (): Promise<RailwayProject[]> => {
 	try {
 		await checkRailwayCliStatus();
-		const projects = await runRailwayJsonCommand("railway list --json");
+		const projects = await runRailwayJsonCommand(["list", "--json"]);
 
 		if (!Array.isArray(projects)) {
 			throw new Error("Unexpected response format from Railway CLI");
@@ -95,18 +94,17 @@ export const createRailwayProject = async ({
 	try {
 		await checkRailwayCliStatus();
 
-		// Check if there's already a linked project
 		const linkedProjectResult = await getLinkedProjectInfo({ workspacePath });
 		if (linkedProjectResult.success && linkedProjectResult.project) {
 			return "A Railway project is already linked to this workspace. No new project created.";
 		}
 
 		const { output: initOutput } = await runRailwayCommand(
-			`railway init --name ${projectName}`,
+			["init", "--name", projectName],
 			workspacePath,
 		);
 		const { output: linkOutput } = await runRailwayCommand(
-			`railway link -p ${projectName}`,
+			["link", "-p", projectName],
 			workspacePath,
 		);
 
