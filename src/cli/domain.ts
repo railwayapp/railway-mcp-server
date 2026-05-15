@@ -18,14 +18,10 @@ export const generateRailwayDomain = async ({
       throw new Error(projectResult.error);
     }
 
-    // Build the railway domain command with options
-    let command = "railway domain --json";
+    const args = ["domain", "--json"];
+    if (service) args.push("--service", service);
 
-    if (service) {
-      command += ` --service ${service}`;
-    }
-
-    const domainResult = await runRailwayJsonCommand(command, workspacePath);
+    const domainResult = await runRailwayJsonCommand(args, workspacePath);
 
     if (domainResult.domain) {
       return domainResult.domain;

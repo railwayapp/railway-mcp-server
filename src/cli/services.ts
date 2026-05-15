@@ -21,14 +21,12 @@ export const getRailwayServices = async ({
 		}
 
 		const { output } = await runRailwayCommand(
-			"railway status --json",
+			["status", "--json"],
 			workspacePath,
 		);
 
-		// Parse the JSON output to extract services
 		const statusData = JSON.parse(output);
 
-		// Extract services from the JSON structure
 		const services =
 			statusData.services?.edges?.map(
 				(edge: { node: { name: string } }) => edge.node.name,
@@ -58,7 +56,7 @@ export const linkRailwayService = async ({
 		}
 
 		const { output } = await runRailwayCommand(
-			`railway service ${serviceName}`,
+			["service", serviceName],
 			workspacePath,
 		);
 

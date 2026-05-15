@@ -1,23 +1,26 @@
-import { exec } from "node:child_process";
+import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { analyzeRailwayError } from "./error-handling";
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
-export const runRailwayCommand = async (command: string, cwd?: string) => {
-  const { stdout, stderr } = await execAsync(command, { cwd });
+// Pass argv as an array. We invoke `railway` directly via execFile, so no shell
+// is involved and metacharacters in user-supplied arguments cannot be parsed
+// as commands.
+export const runRailwayCommand = async (args: string[], cwd?: string) => {
+  const { stdout, stderr } = await execFileAsync("railway", args, { cwd });
   return { stdout, stderr, output: stdout + stderr };
 };
 
-export const runRailwayJsonCommand = async (command: string, cwd?: string) => {
-  const { stdout } = await runRailwayCommand(command, cwd);
+export const runRailwayJsonCommand = async (args: string[], cwd?: string) => {
+  const { stdout } = await runRailwayCommand(args, cwd);
   return JSON.parse(stdout.trim());
 };
 
 export const checkRailwayCliStatus = async (): Promise<void> => {
   try {
-    await runRailwayCommand("railway --version");
-    await runRailwayCommand("railway whoami");
+    await runRailwayCommand(["--version"]);
+    await runRailwayCommand(["whoami"]);
   } catch (error: unknown) {
     return analyzeRailwayError(error, "railway whoami");
   }

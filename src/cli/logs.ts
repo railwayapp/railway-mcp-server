@@ -21,11 +21,9 @@ export const buildLogCommand = async ({
   lines,
   filter,
   json = false,
-}: BuildLogCommandOptions): Promise<string> => {
+}: BuildLogCommandOptions): Promise<string[]> => {
   const args = ["logs", `--${type}`];
-  if (json) {
-    args.push("--json");
-  }
+  if (json) args.push("--json");
 
   const features = await getCliFeatureSupport();
   const supportsLinesAndFilter =
@@ -36,19 +34,16 @@ export const buildLogCommand = async ({
     // turned on.
     const defaultLines = json ? "100" : "500";
 
-    // Always use --lines when specified to prevent streaming
     args.push("--lines", lines ? lines.toString() : defaultLines);
 
-    if (filter) {
-      args.push("--filter", `"${filter}"`);
-    }
+    if (filter) args.push("--filter", filter);
   }
 
   if (deploymentId) args.push(deploymentId);
   if (service) args.push("--service", service);
   if (environment) args.push("--environment", environment);
 
-  return `railway ${args.join(" ")}`;
+  return args;
 };
 
 export type GetLogsOptions = Pick<
@@ -67,7 +62,7 @@ export const getRailwayDeployLogs = async ({
   filter,
   json,
 }: GetLogsOptions): Promise<string> => {
-  const command = await buildLogCommand({
+  const args = await buildLogCommand({
     type: "deployment",
     deploymentId,
     service,
@@ -84,11 +79,11 @@ export const getRailwayDeployLogs = async ({
       throw new Error(result.error);
     }
 
-    const { output } = await runRailwayCommand(command, workspacePath);
+    const { output } = await runRailwayCommand(args, workspacePath);
 
     return output;
   } catch (error: unknown) {
-    return analyzeRailwayError(error, command);
+    return analyzeRailwayError(error, `railway ${args.join(" ")}`);
   }
 };
 
@@ -101,7 +96,7 @@ export const getRailwayBuildLogs = async ({
   filter,
   json,
 }: GetLogsOptions): Promise<string> => {
-  const command = await buildLogCommand({
+  const args = await buildLogCommand({
     type: "build",
     deploymentId,
     service,
@@ -117,10 +112,10 @@ export const getRailwayBuildLogs = async ({
       throw new Error(result.error);
     }
 
-    const { output } = await runRailwayCommand(command, workspacePath);
+    const { output } = await runRailwayCommand(args, workspacePath);
 
     return output;
   } catch (error: unknown) {
-    return analyzeRailwayError(error, command);
+    return analyzeRailwayError(error, `railway ${args.join(" ")}`);
   }
 };

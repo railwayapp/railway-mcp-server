@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as core from "./core";
 import { listDeployments } from "./deployment";
-import * as errorHandling from "./error-handling";
 import type { RailwayProject } from "./projects";
 import * as projects from "./projects";
 import * as version from "./version";
@@ -62,7 +61,7 @@ describe("listDeployments", () => {
 
       expect(result.success).toBe(true);
       expect(core.runRailwayCommand).toHaveBeenCalledWith(
-        "railway deployment list --limit 20",
+        ["deployment", "list", "--limit", "20"],
         mockWorkspacePath
       );
     });
@@ -75,7 +74,7 @@ describe("listDeployments", () => {
 
       expect(result.success).toBe(true);
       expect(core.runRailwayCommand).toHaveBeenCalledWith(
-        "railway deployment list --limit 20 --json",
+        ["deployment", "list", "--limit", "20", "--json"],
         mockWorkspacePath
       );
     });
@@ -88,7 +87,7 @@ describe("listDeployments", () => {
 
       expect(result.success).toBe(true);
       expect(core.runRailwayCommand).toHaveBeenCalledWith(
-        "railway deployment list --service my-api-service --limit 20",
+        ["deployment", "list", "--service", "my-api-service", "--limit", "20"],
         mockWorkspacePath
       );
     });
@@ -108,7 +107,7 @@ describe("listDeployments", () => {
 
       expect(result.success).toBe(true);
       expect(core.runRailwayCommand).toHaveBeenCalledWith(
-        "railway deployment list --environment staging --limit 20",
+        ["deployment", "list", "--environment", "staging", "--limit", "20"],
         mockWorkspacePath
       );
     });
@@ -128,7 +127,7 @@ describe("listDeployments", () => {
 
       expect(result.success).toBe(true);
       expect(core.runRailwayCommand).toHaveBeenCalledWith(
-        "railway deployment list --limit 50",
+        ["deployment", "list", "--limit", "50"],
         mockWorkspacePath
       );
     });

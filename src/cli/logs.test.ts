@@ -15,15 +15,8 @@ describe("Railway Logs Module", () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({
@@ -32,24 +25,22 @@ describe("Railway Logs Module", () => {
         filter: "error",
       });
 
-      expect(command).toBe(
-        'railway logs --deployment --lines 100 --filter "error"'
-      );
+      expect(command).toEqual([
+        "logs",
+        "--deployment",
+        "--lines",
+        "100",
+        "--filter",
+        "error",
+      ]);
     });
 
     it("should build build command with lines and filter for v4.9.0+", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({
@@ -58,65 +49,54 @@ describe("Railway Logs Module", () => {
         filter: "warning",
       });
 
-      expect(command).toBe(
-        'railway logs --build --lines 200 --filter "warning"'
-      );
+      expect(command).toEqual([
+        "logs",
+        "--build",
+        "--lines",
+        "200",
+        "--filter",
+        "warning",
+      ]);
     });
 
     it("should default to 500 lines when json is false", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({ type: "deployment" });
 
-      expect(command).toBe("railway logs --deployment --lines 500");
+      expect(command).toEqual(["logs", "--deployment", "--lines", "500"]);
     });
 
     it("should default to 100 lines when json is true", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({ type: "deployment", json: true });
 
-      expect(command).toBe("railway logs --deployment --json --lines 100");
-      expect(command).toBe("railway logs --deployment --json --lines 100");
+      expect(command).toEqual([
+        "logs",
+        "--deployment",
+        "--json",
+        "--lines",
+        "100",
+      ]);
     });
 
     it("should not include lines/filter for older CLI versions", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: false,
-            filter: false,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: false, filter: false } },
       });
 
       const command = await buildLogCommand({
@@ -125,22 +105,15 @@ describe("Railway Logs Module", () => {
         filter: "error", // Should be ignored
       });
 
-      expect(command).toBe("railway logs --deployment");
+      expect(command).toEqual(["logs", "--deployment"]);
     });
 
     it("should include deploymentId when provided", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({
@@ -148,22 +121,21 @@ describe("Railway Logs Module", () => {
         deploymentId: "deploy-123",
       });
 
-      expect(command).toBe("railway logs --deployment --lines 500 deploy-123");
+      expect(command).toEqual([
+        "logs",
+        "--deployment",
+        "--lines",
+        "500",
+        "deploy-123",
+      ]);
     });
 
     it("should include service and environment when provided", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({
@@ -173,24 +145,24 @@ describe("Railway Logs Module", () => {
         lines: 50,
       });
 
-      expect(command).toBe(
-        "railway logs --deployment --lines 50 --service api --environment production"
-      );
+      expect(command).toEqual([
+        "logs",
+        "--deployment",
+        "--lines",
+        "50",
+        "--service",
+        "api",
+        "--environment",
+        "production",
+      ]);
     });
 
     it("should handle all parameters together", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({
@@ -202,24 +174,27 @@ describe("Railway Logs Module", () => {
         filter: "timeout",
       });
 
-      expect(command).toBe(
-        'railway logs --build --lines 75 --filter "timeout" deploy-456 --service backend --environment staging'
-      );
+      expect(command).toEqual([
+        "logs",
+        "--build",
+        "--lines",
+        "75",
+        "--filter",
+        "timeout",
+        "deploy-456",
+        "--service",
+        "backend",
+        "--environment",
+        "staging",
+      ]);
     });
 
     it("should not include --json flag when json is false", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({
@@ -228,22 +203,20 @@ describe("Railway Logs Module", () => {
         json: false,
       });
 
-      expect(command).toBe("railway logs --deployment --lines 100");
+      expect(command).toEqual([
+        "logs",
+        "--deployment",
+        "--lines",
+        "100",
+      ]);
     });
 
     it("should not include --json flag when undefined", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({
@@ -252,22 +225,20 @@ describe("Railway Logs Module", () => {
         json: false,
       });
 
-      expect(command).toBe("railway logs --deployment --lines 100");
+      expect(command).toEqual([
+        "logs",
+        "--deployment",
+        "--lines",
+        "100",
+      ]);
     });
 
     it("should include --json flag when true", async () => {
       const { getCliFeatureSupport } = await import("./version");
 
       vi.mocked(getCliFeatureSupport).mockResolvedValue({
-        deployment: {
-          list: true,
-        },
-        logs: {
-          args: {
-            lines: true,
-            filter: true,
-          },
-        },
+        deployment: { list: true },
+        logs: { args: { lines: true, filter: true } },
       });
 
       const command = await buildLogCommand({
@@ -276,7 +247,13 @@ describe("Railway Logs Module", () => {
         json: true,
       });
 
-      expect(command).toBe("railway logs --deployment --json --lines 100");
+      expect(command).toEqual([
+        "logs",
+        "--deployment",
+        "--json",
+        "--lines",
+        "100",
+      ]);
     });
   });
 });
