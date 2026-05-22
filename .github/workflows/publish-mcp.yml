@@ -1,47 +1,40 @@
-name: Publish to MCP Registry
+name: Publish final compatibility package
 
 on:
   push:
-    tags: ['v*']
+    tags: ["v*"]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Required for OIDC authentication
+      id-token: write
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        
+
       - name: Install Node.js (sets registry + auth)
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@railway' 
-      
-      - name: Setup Go (for mcp-publisher build)
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-      
-      - name: Install dependencies
-        run: pnpm install
-      
+          registry-url: "https://registry.npmjs.org"
+          scope: "@railway"
+
       - name: Build package
-        run: pnpm run build
+        run: npm run build
 
       - name: Upgrade npm (Trusted Publishing requires npm >= 11.5.1)
         run: npm install -g npm@11.14.1
 
       - name: Publish to npm
         run: npm publish --provenance --access public
+
+      - name: Setup Go for MCP Publisher
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
 
       - name: Install MCP Publisher
         run: |
@@ -51,9 +44,12 @@ jobs:
           cp bin/mcp-publisher ../mcp-publisher
           cd ..
           chmod +x mcp-publisher
-      
+
       - name: Login to MCP Registry
         run: ./mcp-publisher login github-oidc
-      
-      - name: Publish to MCP Registry
-        run: ./mcp-publisher publish
+
+      - name: Deprecate MCP Registry entry
+        run: >
+          ./mcp-publisher status --status deprecated --all-versions --yes
+          --message "Deprecated: use the Railway CLI bundled MCP server via 'railway mcp' or 'railway mcp install'."
+          io.github.railwayapp/mcp-server
